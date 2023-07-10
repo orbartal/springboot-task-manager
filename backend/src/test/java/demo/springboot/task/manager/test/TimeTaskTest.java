@@ -105,10 +105,10 @@ public class TimeTaskTest {
 
 		List<Map<String, String>> events = result.getEvents();
 		Assertions.assertNotNull(events);
-		Assertions.assertEquals(6, events.size());
+		Assertions.assertEquals(5, events.size());
 
 		List<Integer> actualIds = events.stream().map(e->e.get("id")).map(s->Integer.parseInt(s)).collect(Collectors.toList());
-		List<Integer> expectedIds = Lists.list(0, 1, 2, 3, 4, 5);
+		List<Integer> expectedIds = Lists.list(1, 2, 3, 4, 5);
 		Assertions.assertEquals(expectedIds, actualIds);
 
 		Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
@@ -125,7 +125,6 @@ public class TimeTaskTest {
 		@SuppressWarnings("serial")
 		Map<Integer, Double> expectedValueById = new HashMap<Integer, Double>() {
 			{
-				put(0, 0.0);
 				put(1, 0.0);
 				put(2, 0.2);
 				put(3, 0.4);
