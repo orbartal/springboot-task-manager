@@ -34,7 +34,6 @@ public class ServerSentEventSubscriber implements Subscriber<ServerSentEvent<Str
 
 	@Override
 	public void onComplete() {
-		System.out.println(testName + ".onComplete");
 		this.result.onComplete();
 	}
 
