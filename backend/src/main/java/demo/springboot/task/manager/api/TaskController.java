@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import demo.springboot.task.manager.sender.TaskEmitter;
 import demo.springboot.task.manager.service.TaskService;
 
 @RestController
@@ -31,7 +32,8 @@ public class TaskController {
 	@GetMapping("/uid/{uid}/progress")
 	public SseEmitter eventEmitter(@PathVariable String uid) throws IOException {
 		UUID uuid = UUID.fromString(uid);
-		return taskService.getEmitterByTaskUid(uuid);
+		TaskEmitter taskEmitter = taskService.getEmitterByTaskUid(uuid);
+		return taskEmitter.getEmitter();
 	}
 
 }

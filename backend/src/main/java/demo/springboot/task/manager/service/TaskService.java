@@ -6,7 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import demo.springboot.task.manager.sender.TaskEmitter;
 
 @Service
 public class TaskService {
@@ -27,8 +28,8 @@ public class TaskService {
 		emitterService.delete(uid);
 	}
 
-	public SseEmitter getEmitterByTaskUid(UUID uid) {
-		Optional<SseEmitter> emitter = emitterService.getEmitterByTaskUid(uid);
+	public TaskEmitter getEmitterByTaskUid(UUID uid) {
+		Optional<TaskEmitter> emitter = emitterService.getEmitterByTaskUid(uid);
 		if (!emitter.isPresent()) {
 			throw new RuntimeException("No task found with uid: " + uid);
 		}
