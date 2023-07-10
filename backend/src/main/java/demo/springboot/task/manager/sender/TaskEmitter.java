@@ -26,7 +26,6 @@ public class TaskEmitter {
 
 	public synchronized void sendProgress(double progress) {
 		counter ++;
-		System.out.println("sendProgress: counter = " + counter + ", progress = " + progress);
 		emitters.forEach(e->sendProgress(e, progress));
 	}
 

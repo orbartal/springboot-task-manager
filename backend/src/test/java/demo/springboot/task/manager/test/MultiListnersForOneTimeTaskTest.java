@@ -107,7 +107,6 @@ public class MultiListnersForOneTimeTaskTest {
 		Assertions.assertEquals(NUMBER_OF_LISTNERS, results.size());
 
 		for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
-			System.out.println(i + ") test04ValidateTaskProgressResults");
 			ProgressResult result = results.get(i);
 			Assertions.assertNotNull(result);
 			Assertions.assertFalse(result.getIsError());
@@ -115,7 +114,6 @@ public class MultiListnersForOneTimeTaskTest {
 
 			List<Map<String, String>> events = result.getEvents();
 			Assertions.assertNotNull(events);
-			System.out.println("events: " + events);
 			Assertions.assertEquals(5, events.size());
 
 			List<Integer> actualIds = events.stream().map(e->e.get("id")).map(s->Integer.parseInt(s)).collect(Collectors.toList());
