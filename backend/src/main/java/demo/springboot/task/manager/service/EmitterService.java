@@ -15,12 +15,19 @@ public class EmitterService {
 
 	private final Map<UUID, TaskEmitter> sseEmitters = new ConcurrentHashMap<>();
 
-	public SseEmitter createEmitter(UUID uuid) {
-		SseEmitter sseEmitter = buildEmitter(uuid);
-		TaskEmitter taskEmitter = new TaskEmitter(uuid, sseEmitter);
+	public void createEmitter(UUID uuid) {
+		TaskEmitter taskEmitter = new TaskEmitter(uuid);
 		sseEmitters.put(uuid, taskEmitter);
-		taskEmitter.sendProgress(0.0);
-		return sseEmitter;
+	}
+	
+	public Optional<SseEmitter> addEmitter(UUID taskUid) {
+		TaskEmitter taskEmitter = sseEmitters.get(taskUid);
+		if (taskEmitter == null) {
+			return Optional.empty();
+		}
+		SseEmitter sseEmitter = buildEmitter(taskUid);
+		taskEmitter.addEmitter(sseEmitter);
+		return Optional.of(sseEmitter);
 	}
 
 	private SseEmitter buildEmitter(UUID uuid) {

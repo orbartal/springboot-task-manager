@@ -1,6 +1,7 @@
 package demo.springboot.task.manager.test;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +36,11 @@ import reactor.core.publisher.Flux;
 @TestMethodOrder(OrderAnnotation.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TimeTaskTest {
+public class MultiListnersForOneTimeTaskTest {
 
+	private static final int NUMBER_OF_LISTNERS = 10;
 	private static Optional<String> taskUid = Optional.empty();
-	private static Optional<ProgressResult> pResult  = Optional.empty();
+	private static List<ProgressResult> results  = new ArrayList<>();
 
 	@LocalServerPort
 	private int port;
@@ -85,43 +87,48 @@ public class TimeTaskTest {
 	@Order(3)
 	@Test
 	public void test03GetProgressByTaskUid() throws Exception {
-		ParameterizedTypeReference<ServerSentEvent<String>> type = new ParameterizedTypeReference<ServerSentEvent<String>>() {};
-		String url = TargetUrlFactory.buildGetProgressUrl(port, taskUid.get());
-		Flux<ServerSentEvent<String>> eventStream = WebClient.create().get().uri(url).retrieve().bodyToFlux(type);
-		ServerSentEventSubscriber subscriber = new ServerSentEventSubscriber("TimeTaskTest");
-		eventStream.subscribe(subscriber);
-		TimeUnit.SECONDS.sleep(10);
-		pResult = Optional.ofNullable(subscriber.getResult());
+		List<ServerSentEventSubscriber> subscribers = new ArrayList<>();
+		for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
+			ParameterizedTypeReference<ServerSentEvent<String>> type = new ParameterizedTypeReference<ServerSentEvent<String>>() {};
+			String url = TargetUrlFactory.buildGetProgressUrl(port, taskUid.get());
+			Flux<ServerSentEvent<String>> eventStream = WebClient.create().get().uri(url).retrieve().bodyToFlux(type);
+			ServerSentEventSubscriber subscriber = new ServerSentEventSubscriber("TimeTaskTest" + i);
+			eventStream.subscribe(subscriber);
+			subscribers.add(subscriber);
+		}
+		TimeUnit.SECONDS.sleep(15);
+		subscribers.forEach(s -> results.add(s.getResult()));
 	}
 	
 	@Order(4)
 	@Test
 	public void test04ValidateTaskProgressResults() throws Exception {
-		Assertions.assertTrue(pResult.isPresent());
-		ProgressResult result = pResult.get();
-		Assertions.assertNotNull(result);
-		Assertions.assertFalse(result.getIsError());
-		Assertions.assertTrue(result.getIsCompleted());
+		Assertions.assertNotNull(results);
+		Assertions.assertEquals(NUMBER_OF_LISTNERS, results.size());
 
-		List<Map<String, String>> events = result.getEvents();
-		Assertions.assertNotNull(events);
-		Assertions.assertEquals(5, events.size());
+		for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
+			ProgressResult result = results.get(i);
+			Assertions.assertNotNull(result);
+			Assertions.assertFalse(result.getIsError());
+			Assertions.assertTrue(result.getIsCompleted());
 
-		List<Integer> actualIds = events.stream().map(e->e.get("id")).map(s->Integer.parseInt(s)).collect(Collectors.toList());
-		List<Integer> expectedIds = Lists.list(1, 2, 3, 4, 5);
-		Assertions.assertEquals(expectedIds, actualIds);
+			List<Map<String, String>> events = result.getEvents();
+			Assertions.assertNotNull(events);
+			Assertions.assertEquals(5, events.size());
 
-		Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
-		Assertions.assertEquals(1, eventValues.size());
-		Assertions.assertEquals(taskUid.get(), eventValues.iterator().next());
+			List<Integer> actualIds = events.stream().map(e->e.get("id")).map(s->Integer.parseInt(s)).collect(Collectors.toList());
+			List<Integer> expectedIds = Lists.list(1, 2, 3, 4, 5);
+			Assertions.assertEquals(expectedIds, actualIds);
+
+			Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
+			Assertions.assertEquals(1, eventValues.size());
+			Assertions.assertEquals(taskUid.get(), eventValues.iterator().next());
+		}
 	}
 
 	@Order(5)
 	@Test
 	public void test05ValidateTaskProgressResultsMap() throws Exception {
-		Map<Integer, Double> actualValueById = pResult.get().getEvents().stream()
-				.collect(Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
-
 		@SuppressWarnings("serial")
 		Map<Integer, Double> expectedValueById = new HashMap<Integer, Double>() {
 			{
@@ -132,7 +139,17 @@ public class TimeTaskTest {
 				put(5, 0.8);
 			}
 		};
-		Assertions.assertEquals(expectedValueById, actualValueById);
+
+		Assertions.assertNotNull(results);
+		Assertions.assertEquals(NUMBER_OF_LISTNERS, results.size());
+
+		for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
+			ProgressResult result = results.get(i);
+			List<Map<String, String>> events = result.getEvents();
+			Map<Integer, Double> actualValueById = events.stream().collect(
+					Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
+			Assertions.assertEquals(expectedValueById, actualValueById);
+		}
 	}
 
 }
