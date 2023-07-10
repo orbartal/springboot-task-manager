@@ -19,7 +19,7 @@ public class SubscriberEmitter implements Subscriber<Long> {
 		this.taskUid = taskUid;
 		this.emitter = emitter;
 		this.total = total;
-		this.counter = 0;
+		this.counter = 1;
 	}
 
 	@Override

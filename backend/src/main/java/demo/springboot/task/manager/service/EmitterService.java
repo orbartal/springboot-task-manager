@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 @Service
 public class EmitterService {
@@ -23,7 +24,8 @@ public class EmitterService {
 
 	private void sendUid(UUID uuid, SseEmitter sseEmitter) {
 		try {
-			sseEmitter.send(uuid.toString());
+			SseEventBuilder eventBuilder = SseEmitter.event().id("0").name(uuid.toString()).data(0);
+			sseEmitter.send(eventBuilder);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
