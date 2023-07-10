@@ -27,7 +27,7 @@ public class TimeService {
 		TaskEmitter emitter = taskService.getEmitterByTaskUid(taskUid);
 		SubscriberEmitter subscriber = new SubscriberEmitter(taskUid, emitter, repeats);
 
-		Flux.interval(Duration.ZERO, Duration.ofSeconds(interval)).log().take(repeats).subscribe(subscriber);
+		Flux.interval(Duration.ofSeconds(1), Duration.ofSeconds(interval)).log().take(repeats).subscribe(subscriber);
 	}
 
 }
