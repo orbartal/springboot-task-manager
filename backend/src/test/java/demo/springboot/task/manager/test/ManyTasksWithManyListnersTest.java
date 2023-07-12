@@ -160,9 +160,7 @@ public class ManyTasksWithManyListnersTest {
 			Assertions.assertEquals(NUMBER_OF_LISTNERS, resultsForOneTask.size());
 			for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
 				ProgressResult result = resultsForOneTask.get(i);
-				List<Map<String, String>> events = result.getEvents();
-				Map<Integer, Double> actualValueById = events.stream().collect(
-						Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
+				Map<Integer, Double> actualValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId(result);
 				Assertions.assertEquals(expectedValueById, actualValueById);
 			}
 		}

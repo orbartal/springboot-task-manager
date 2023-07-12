@@ -2,6 +2,9 @@ package demo.springboot.task.manager.utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import demo.springboot.task.manager.model.ProgressResult;
 
 public class TaskProgressDataFactory {
 
@@ -18,5 +21,10 @@ public class TaskProgressDataFactory {
 			}
 		};
 		return progressByEventId;
+	}
+	
+	public static  Map<Integer, Double> buildMarixOfProgressByEventId(ProgressResult progressResult) {
+		return progressResult.getEvents().stream()
+				.collect(Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
 	}
 }

@@ -119,9 +119,8 @@ public class TimeTaskTest {
 	@Order(5)
 	@Test
 	public void test05ValidateTaskProgressResultsMap() throws Exception {
-		Map<Integer, Double> actualValueById = pResult.get().getEvents().stream()
-				.collect(Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
-
+		ProgressResult progressResult = pResult.get();
+		Map<Integer, Double> actualValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId(progressResult);
 		Map<Integer, Double> expectedValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId();
 		Assertions.assertEquals(expectedValueById, actualValueById);
 	}
