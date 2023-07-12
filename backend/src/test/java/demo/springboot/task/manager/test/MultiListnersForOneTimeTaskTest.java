@@ -2,7 +2,6 @@ package demo.springboot.task.manager.test;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +28,7 @@ import demo.springboot.task.manager.model.ProgressResult;
 import demo.springboot.task.manager.model.ServerSentEventSubscriber;
 import demo.springboot.task.manager.model.TimeTaskRequest;
 import demo.springboot.task.manager.utils.TargetUrlFactory;
+import demo.springboot.task.manager.utils.TaskProgressDataFactory;
 import io.restassured.response.Response;
 import reactor.core.publisher.Flux;
 
@@ -129,17 +129,7 @@ public class MultiListnersForOneTimeTaskTest {
 	@Order(5)
 	@Test
 	public void test05ValidateTaskProgressResultsMap() throws Exception {
-		@SuppressWarnings("serial")
-		Map<Integer, Double> expectedValueById = new HashMap<Integer, Double>() {
-			{
-				put(1, 0.0);
-				put(2, 0.2);
-				put(3, 0.4);
-				put(4, 0.6);
-				put(5, 0.8);
-			}
-		};
-
+		Map<Integer, Double> expectedValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId();
 		Assertions.assertNotNull(results);
 		Assertions.assertEquals(NUMBER_OF_LISTNERS, results.size());
 
