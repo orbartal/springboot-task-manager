@@ -2,7 +2,6 @@ package demo.springboot.task.manager.test;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +27,7 @@ import demo.springboot.task.manager.model.ProgressResult;
 import demo.springboot.task.manager.model.ServerSentEventSubscriber;
 import demo.springboot.task.manager.model.TimeTaskRequest;
 import demo.springboot.task.manager.utils.TargetUrlFactory;
+import demo.springboot.task.manager.utils.TaskProgressDataFactory;
 import io.restassured.response.Response;
 import reactor.core.publisher.Flux;
 
@@ -134,25 +134,14 @@ public class ManyTasksOneListenerTest {
 	@Order(5)
 	@Test
 	public void test05ValidateTaskProgressResultsMap() throws Exception {
-		@SuppressWarnings("serial")
-		Map<Integer, Double> expectedValueById = new HashMap<Integer, Double>() {
-			{
-				put(1, 0.0);
-				put(2, 0.2);
-				put(3, 0.4);
-				put(4, 0.6);
-				put(5, 0.8);
-			}
-		};
+		Map<Integer, Double> expectedValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId();
 
 		Assertions.assertNotNull(results);
 		Assertions.assertEquals(NUMBER_OF_TASKS, results.size());
 
 		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
 			ProgressResult result = results.get(i);
-			List<Map<String, String>> events = result.getEvents();
-			Map<Integer, Double> actualValueById = events.stream().collect(
-					Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
+			Map<Integer, Double> actualValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId(result);
 			Assertions.assertEquals(expectedValueById, actualValueById);
 		}
 	}
