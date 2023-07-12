@@ -38,6 +38,7 @@ import reactor.core.publisher.Flux;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ManyTasksWithManyListnersTest {
 
+	private static final int SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH = 15;
 	private static final int NUMBER_OF_TASKS = 3;
 	private static final int NUMBER_OF_LISTNERS = 3;
 
@@ -108,7 +109,7 @@ public class ManyTasksWithManyListnersTest {
 			subscribersByTask.put(taskUids.get(t), subscribers);
 		}
 
-		TimeUnit.SECONDS.sleep(15);
+		TimeUnit.SECONDS.sleep(SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH);
 
 		for (String taskUid : taskUids) {
 			List<ProgressResult> resultsForOneTask = new ArrayList<>();
