@@ -38,6 +38,7 @@ import reactor.core.publisher.Flux;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ManyTasksWithManyListnersTest {
 
+	private static final int NUMBER_OF_STAGES_PER_TASK = 5;
 	private static final int SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH = 15;
 	private static final int NUMBER_OF_TASKS = 3;
 	private static final int NUMBER_OF_LISTNERS = 3;
@@ -82,7 +83,7 @@ public class ManyTasksWithManyListnersTest {
 			TimeTaskRequest request = new TimeTaskRequest();
 			request.setTaskUid(taskUids.get(i));
 			request.setInterval(1);
-			request.setRepeats(5);
+			request.setRepeats(NUMBER_OF_STAGES_PER_TASK);
 
 			Response response = targetApi.startTimeTask(request);
 
