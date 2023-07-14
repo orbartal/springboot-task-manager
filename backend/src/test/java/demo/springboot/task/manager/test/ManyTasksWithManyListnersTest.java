@@ -39,7 +39,7 @@ import reactor.core.publisher.Flux;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ManyTasksWithManyListnersTest {
 
-	TestTimeTaskConfig testConfig = TestTimeTaskConfig.builder()
+	private static final TestTimeTaskConfig testConfig = TestTimeTaskConfig.builder()
 										.numberOfTasks(3)
 										.numberOfListnersPerTasks(3)
 										.waitTimeInSecond(15)
