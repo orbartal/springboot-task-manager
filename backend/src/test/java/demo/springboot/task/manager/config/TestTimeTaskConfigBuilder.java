@@ -1,5 +1,7 @@
 package demo.springboot.task.manager.config;
 
+import java.util.Map;
+
 public class TestTimeTaskConfigBuilder {
 
 	private int numberOfTasks;
@@ -7,6 +9,7 @@ public class TestTimeTaskConfigBuilder {
 	private int waitTimeInSecond;
 	private int intervalInSeconds;
 	private int numberOfStages;
+	private Map<Integer, Double> valueById;
 	
 	protected TestTimeTaskConfigBuilder () {}
 
@@ -34,9 +37,14 @@ public class TestTimeTaskConfigBuilder {
 		this.numberOfStages = numberOfStages;
 		return this;
 	}
-	
+
+	public TestTimeTaskConfigBuilder mapOfValueById(Map<Integer, Double> valueById) {
+		this.valueById = valueById;
+		return this;
+	}
+
 	public TestTimeTaskConfig build() {
-		return new TestTimeTaskConfig(numberOfTasks, numberOfListnersPerTasks, intervalInSeconds, numberOfStages, waitTimeInSecond);
+		return new TestTimeTaskConfig(numberOfTasks, numberOfListnersPerTasks, intervalInSeconds, numberOfStages, waitTimeInSecond, valueById);
 	}
 
 }

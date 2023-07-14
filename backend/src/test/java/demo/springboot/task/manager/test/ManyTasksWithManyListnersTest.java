@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -45,6 +44,7 @@ public class ManyTasksWithManyListnersTest {
 										.waitTimeInSecond(15)
 										.intervalInSeconds(1)
 										.numberOfStages(5)
+										.mapOfValueById(TaskProgressDataFactory.buildMarixOfProgressByEventId())
 										.build();
 
 	private static List<String> taskUids = new ArrayList<>();
@@ -143,7 +143,7 @@ public class ManyTasksWithManyListnersTest {
 				Assertions.assertEquals(5, events.size());
 
 				List<Integer> actualIds = events.stream().map(e->e.get("id")).map(s->Integer.parseInt(s)).collect(Collectors.toList());
-				List<Integer> expectedIds = Lists.list(1, 2, 3, 4, 5);
+				List<Integer> expectedIds = testConfig.getEventsIds();
 				Assertions.assertEquals(expectedIds, actualIds);
 
 				Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
@@ -157,7 +157,6 @@ public class ManyTasksWithManyListnersTest {
 	@Order(5)
 	@Test
 	public void test05ValidateTaskProgressResultsMap() throws Exception {
-		Map<Integer, Double> expectedValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId();
 		Assertions.assertNotNull(results);
 		Assertions.assertEquals(testConfig.getNumberOfTasks(), results.size());
 
@@ -167,7 +166,7 @@ public class ManyTasksWithManyListnersTest {
 			for (int i = 0; i < testConfig.getNumberOfListnersPerTask(); i++) {
 				ProgressResult result = resultsForOneTask.get(i);
 				Map<Integer, Double> actualValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId(result);
-				Assertions.assertEquals(expectedValueById, actualValueById);
+				Assertions.assertEquals(testConfig.getMapOfValueById(), actualValueById);
 			}
 		}
 	}
