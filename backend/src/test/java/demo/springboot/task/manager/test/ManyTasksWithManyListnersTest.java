@@ -45,12 +45,13 @@ public class ManyTasksWithManyListnersTest {
 	private static final int NUMBER_OF_TASKS = 3;
 	private static final int NUMBER_OF_LISTNERS = 3;
 
-	TestTimeTaskConfig testConfig = new TestTimeTaskConfig(
-			NUMBER_OF_TASKS, 
-			NUMBER_OF_LISTNERS,
-			TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS, 
-			NUMBER_OF_STAGES_PER_TASK, 
-			SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH);
+	TestTimeTaskConfig testConfig = TestTimeTaskConfig.builder()
+										.numberOfTasks(NUMBER_OF_TASKS)
+										.numberOfListnersPerTasks(NUMBER_OF_LISTNERS)
+										.waitTimeInSecond(SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH)
+										.intervalInSeconds(TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS)
+										.numberOfStages(NUMBER_OF_STAGES_PER_TASK)
+										.build();
 
 	private static List<String> taskUids = new ArrayList<>();
 	private static Map<String, List<ProgressResult>> results  = new HashMap<>();

@@ -2,6 +2,10 @@ package demo.springboot.task.manager.config;
 
 public class TestTimeTaskConfig {
 
+	public static TestTimeTaskConfigBuilder builder() {
+		return new TestTimeTaskConfigBuilder();
+	}
+
 	private final int numberOfTasks; // NUMBER_OF_TASKS 3
 	private final int numberOfListnersPerTasks; // NUMBER_OF_LISTNERS 3
 	private final int intervalInSeconds; // TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS 1
