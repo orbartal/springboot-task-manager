@@ -44,7 +44,7 @@ public class ManyTasksWithManyListnersTest {
 										.waitTimeInSecond(15)
 										.intervalInSeconds(1)
 										.numberOfStages(5)
-										.mapOfValueById(TaskProgressDataFactory.buildMarixOfProgressByEventId())
+										.mapOfValueById(TaskProgressDataFactory.buildMarixOfProgressByEventId(0.0, 0.2, 0.4, 0.6, 0.8))
 										.build();
 
 	private static List<String> taskUids = new ArrayList<>();
