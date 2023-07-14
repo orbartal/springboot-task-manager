@@ -6,11 +6,11 @@ public class TestTimeTaskConfig {
 		return new TestTimeTaskConfigBuilder();
 	}
 
-	private final int numberOfTasks; // NUMBER_OF_TASKS 3
-	private final int numberOfListnersPerTasks; // NUMBER_OF_LISTNERS 3
-	private final int intervalInSeconds; // TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS 1
-	private final int numberOfStages; // NUMBER_OF_STAGES_PER_TASK 5
-	private final int waitTimeInSecond; // SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH 15
+	private final int numberOfTasks;
+	private final int numberOfListnersPerTasks;
+	private final int intervalInSeconds;
+	private final int numberOfStages;
+	private final int waitTimeInSecond;
 
 	public TestTimeTaskConfig(int numberOfTasks, int numberOfTasksListners, int intervalInSeconds, int numberOfStages, int waitTimeInSecond) {
 		this.numberOfTasks = numberOfTasks;

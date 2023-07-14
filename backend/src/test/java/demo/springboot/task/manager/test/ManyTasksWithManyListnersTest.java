@@ -39,18 +39,12 @@ import reactor.core.publisher.Flux;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ManyTasksWithManyListnersTest {
 
-	private static final int TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS = 1;
-	private static final int NUMBER_OF_STAGES_PER_TASK = 5;
-	private static final int SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH = 15;
-	private static final int NUMBER_OF_TASKS = 3;
-	private static final int NUMBER_OF_LISTNERS = 3;
-
 	TestTimeTaskConfig testConfig = TestTimeTaskConfig.builder()
-										.numberOfTasks(NUMBER_OF_TASKS)
-										.numberOfListnersPerTasks(NUMBER_OF_LISTNERS)
-										.waitTimeInSecond(SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH)
-										.intervalInSeconds(TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS)
-										.numberOfStages(NUMBER_OF_STAGES_PER_TASK)
+										.numberOfTasks(3)
+										.numberOfListnersPerTasks(3)
+										.waitTimeInSecond(15)
+										.intervalInSeconds(1)
+										.numberOfStages(5)
 										.build();
 
 	private static List<String> taskUids = new ArrayList<>();
