@@ -24,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import demo.springboot.task.manager.api.TargetApi;
+import demo.springboot.task.manager.config.TestTimeTaskConfig;
 import demo.springboot.task.manager.model.ProgressResult;
 import demo.springboot.task.manager.model.ServerSentEventSubscriber;
 import demo.springboot.task.manager.model.TimeTaskRequest;
@@ -44,6 +45,13 @@ public class ManyTasksWithManyListnersTest {
 	private static final int NUMBER_OF_TASKS = 3;
 	private static final int NUMBER_OF_LISTNERS = 3;
 
+	TestTimeTaskConfig testConfig = new TestTimeTaskConfig(
+			NUMBER_OF_TASKS, 
+			NUMBER_OF_LISTNERS,
+			TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS, 
+			NUMBER_OF_STAGES_PER_TASK, 
+			SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH);
+
 	private static List<String> taskUids = new ArrayList<>();
 	private static Map<String, List<ProgressResult>> results  = new HashMap<>();
 
@@ -62,7 +70,7 @@ public class ManyTasksWithManyListnersTest {
 	@Order(1)
 	@Test
 	public void test01CreateNewTaskAndGetItsUid() throws Exception {
-		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
+		for (int i = 0; i < testConfig.getNumberOfTasks(); i++) {
 			Response response = targetApi.createTask();
 
 			Assertions.assertNotNull(response);
@@ -80,11 +88,11 @@ public class ManyTasksWithManyListnersTest {
 	@Order(2)
 	@Test
 	public void test02StartTimeTask() throws Exception {
-		for (int i = 0; i < NUMBER_OF_TASKS; i++) {
+		for (int i = 0; i < testConfig.getNumberOfTasks(); i++) {
 			TimeTaskRequest request = new TimeTaskRequest();
 			request.setTaskUid(taskUids.get(i));
-			request.setInterval(TASK_STAGE_INTERVAL_LENGTH_IN_SECONDS);
-			request.setRepeats(NUMBER_OF_STAGES_PER_TASK);
+			request.setInterval(testConfig.getIntervalInSeconds());
+			request.setRepeats(testConfig.getNumberOfStages());
 
 			Response response = targetApi.startTimeTask(request);
 
@@ -98,9 +106,9 @@ public class ManyTasksWithManyListnersTest {
 	@Test
 	public void test03GetProgressByTaskUid() throws Exception {
 		Map<String, List<ServerSentEventSubscriber>> subscribersByTask  = new HashMap<>();
-		for (int t = 0; t < NUMBER_OF_TASKS; t++) {
+		for (int t = 0; t < testConfig.getNumberOfTasks(); t++) {
 			List<ServerSentEventSubscriber> subscribers = new ArrayList<>();
-			for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
+			for (int i = 0; i < testConfig.getNumberOfListnersPerTask(); i++) {
 				ParameterizedTypeReference<ServerSentEvent<String>> type = new ParameterizedTypeReference<ServerSentEvent<String>>() {};
 				String url = TargetUrlFactory.buildGetProgressUrl(port, taskUids.get(t));
 				Flux<ServerSentEvent<String>> eventStream = WebClient.create().get().uri(url).retrieve().bodyToFlux(type);
@@ -111,7 +119,7 @@ public class ManyTasksWithManyListnersTest {
 			subscribersByTask.put(taskUids.get(t), subscribers);
 		}
 
-		TimeUnit.SECONDS.sleep(SECONDS_TO_WAIT_FOR_ALL_TASKS_TO_FINISH);
+		TimeUnit.SECONDS.sleep(testConfig.getWaitTimeInSecond());
 
 		for (String taskUid : taskUids) {
 			List<ProgressResult> resultsForOneTask = new ArrayList<>();
@@ -125,11 +133,11 @@ public class ManyTasksWithManyListnersTest {
 	@Test
 	public void test04ValidateTaskProgressResults() throws Exception {
 		Assertions.assertNotNull(results);
-		Assertions.assertEquals(NUMBER_OF_TASKS, results.size());
+		Assertions.assertEquals(testConfig.getNumberOfTasks(), results.size());
 		for (String taskUid : taskUids) {
 			List<ProgressResult> resultsForOneTask = results.get(taskUid);
-			Assertions.assertEquals(NUMBER_OF_LISTNERS, resultsForOneTask.size());
-			for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
+			Assertions.assertEquals(testConfig.getNumberOfListnersPerTask(), resultsForOneTask.size());
+			for (int i = 0; i < testConfig.getNumberOfListnersPerTask(); i++) {
 				ProgressResult result = resultsForOneTask.get(i);
 				Assertions.assertNotNull(result);
 				Assertions.assertFalse(result.getIsError());
@@ -156,12 +164,12 @@ public class ManyTasksWithManyListnersTest {
 	public void test05ValidateTaskProgressResultsMap() throws Exception {
 		Map<Integer, Double> expectedValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId();
 		Assertions.assertNotNull(results);
-		Assertions.assertEquals(NUMBER_OF_TASKS, results.size());
+		Assertions.assertEquals(testConfig.getNumberOfTasks(), results.size());
 
 		for (String taskUid : taskUids) {
 			List<ProgressResult> resultsForOneTask = results.get(taskUid);
-			Assertions.assertEquals(NUMBER_OF_LISTNERS, resultsForOneTask.size());
-			for (int i = 0; i < NUMBER_OF_LISTNERS; i++) {
+			Assertions.assertEquals(testConfig.getNumberOfListnersPerTask(), resultsForOneTask.size());
+			for (int i = 0; i < testConfig.getNumberOfListnersPerTask(); i++) {
 				ProgressResult result = resultsForOneTask.get(i);
 				Map<Integer, Double> actualValueById = TaskProgressDataFactory.buildMarixOfProgressByEventId(result);
 				Assertions.assertEquals(expectedValueById, actualValueById);
