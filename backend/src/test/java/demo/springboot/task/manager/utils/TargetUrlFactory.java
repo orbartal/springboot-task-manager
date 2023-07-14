@@ -6,6 +6,10 @@ public class TargetUrlFactory {
 		return "http://localhost:" + serverPort + "/api/v1/task/create";
 	}
 
+	public static String buildGetAllTasksUrl(int serverPort) {
+		return "http://localhost:" + serverPort + "/api/v1/task";
+	}
+
 	public static String buildStartTimeTaskUrl(int serverPort) {
 		return "http://localhost:" + serverPort + "/api/v1/time/task";
 	}
