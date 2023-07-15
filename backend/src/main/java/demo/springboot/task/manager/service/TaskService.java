@@ -41,7 +41,7 @@ public class TaskService {
 	public TaskEmitter getEmitterByTaskUid(UUID uid) {
 		Optional<TaskEmitter> emitter = emitterService.getEmitterByTaskUid(uid);
 		if (!emitter.isPresent()) {
-			throw new RuntimeException("No task found with uid: " + uid);
+			throw new IllegalArgumentException("No task found with uid: " + uid);
 		}
 		return emitter.get();
 	}
@@ -49,7 +49,7 @@ public class TaskService {
 	public SseEmitter createEmitterByTaskUid(UUID uid) {
 		Optional<SseEmitter> emitter = emitterService.addEmitter(uid);
 		if (!emitter.isPresent()) {
-			throw new RuntimeException("No task found with uid: " + uid);
+			throw new IllegalArgumentException("No task found with uid: " + uid);
 		}
 		return emitter.get();
 	}
@@ -57,7 +57,7 @@ public class TaskService {
 	public TaskInfo getTaskInfoByUid(UUID uuid) {
 		Optional<TaskInfo> opt = taskData.readInfoByUid(uuid);
 		if (opt.isEmpty()) {
-			throw new RuntimeException("Not found task with uid: " + uuid);
+			throw new IllegalArgumentException("Not found task with uid: " + uuid);
 		}
 		return opt.get();
 	}
