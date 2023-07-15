@@ -16,9 +16,11 @@ import demo.springboot.task.manager.service.TaskService;
 public class TaskApp {
 
 	private TaskService taskService;
+	private TaskDetailsMapper taskMapper;
 
-	public TaskApp(TaskService taskService) {
+	public TaskApp(TaskService taskService, TaskDetailsMapper taskMapper) {
 		this.taskService = taskService;
+		this.taskMapper = taskMapper;
 	}
 
 	public Map<String, String> createNewTask(TaskCreateRequest request) {
@@ -32,11 +34,7 @@ public class TaskApp {
 	public TaskDetailsResponse getTaskInfoByUid(String uid) {
 		UUID uuid = UUID.fromString(uid);
 		TaskInfo info = taskService.getTaskInfoByUid(uuid);
-
-		TaskDetailsResponse response = new TaskDetailsResponse();
-		response.setName(info.getName());
-		response.setUid(info.getUid().toString());
-		return response;
+		return taskMapper.toResponse(info);
 	}
 
 	public SseEmitter createEmitterByTaskUid(String uid) {
