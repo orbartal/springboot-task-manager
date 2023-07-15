@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import demo.springboot.task.manager.model.TimeTaskRequest;
 import demo.springboot.task.manager.sender.TaskEmitter;
 import demo.springboot.task.manager.subscriber.SubscriberEmitter;
 import reactor.core.publisher.Flux;
@@ -19,14 +18,9 @@ public class TimeService {
 		this.taskService = taskService;
 	}
 
-	public void startTimeTask(TimeTaskRequest request) {
-		UUID taskUid = UUID.fromString(request.getTaskUid());
-		long interval = request.getInterval();
-		int repeats = request.getRepeats();
-
+	public void startTimeTask(UUID taskUid, long interval, int repeats) {
 		TaskEmitter emitter = taskService.getEmitterByTaskUid(taskUid);
 		SubscriberEmitter subscriber = new SubscriberEmitter(taskUid, emitter, repeats);
-
 		Flux.interval(Duration.ofSeconds(1), Duration.ofSeconds(interval)).log().take(repeats).subscribe(subscriber);
 	}
 
