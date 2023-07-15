@@ -16,14 +16,17 @@ import demo.springboot.task.manager.service.TaskService;
 public class TaskApp {
 
 	private TaskService taskService;
+	private TaskValidator taskValidator;
 	private TaskDetailsMapper taskMapper;
 
-	public TaskApp(TaskService taskService, TaskDetailsMapper taskMapper) {
+	public TaskApp(TaskService taskService, TaskValidator taskValidator, TaskDetailsMapper taskMapper) {
 		this.taskService = taskService;
+		this.taskValidator = taskValidator;
 		this.taskMapper = taskMapper;
 	}
 
 	public Map<String, String> createNewTask(TaskCreateRequest request) {
+		taskValidator.validate(request);
 		return taskService.createNewTask(request.getName());
 	}
 
@@ -33,13 +36,13 @@ public class TaskApp {
 	}
 
 	public TaskDetailsResponse getTaskInfoByUid(String uid) {
-		UUID uuid = UUID.fromString(uid);
+		UUID uuid = taskValidator.validateUid(uid);
 		TaskInfo info = taskService.getTaskInfoByUid(uuid);
 		return taskMapper.toResponse(info);
 	}
 
 	public SseEmitter createEmitterByTaskUid(String uid) {
-		UUID uuid = UUID.fromString(uid);
+		UUID uuid = taskValidator.validateUid(uid);
 		return taskService.createEmitterByTaskUid(uuid);
 	}
 
