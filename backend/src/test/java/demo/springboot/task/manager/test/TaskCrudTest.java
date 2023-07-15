@@ -95,6 +95,7 @@ public class TaskCrudTest {
 	@Order(3)
 	@Test
 	public void testTaskByUid() throws Exception {
+		int i = 0;
 		for (String taskUidInput : taskUids) {
 			Response response = targetApi.getTaskByUid(taskUidInput);
 
@@ -106,6 +107,9 @@ public class TaskCrudTest {
 			Assertions.assertNotNull(response.getBody());
 			String taskUidOutput = responseTask.get("uid").toString();
 			Assertions.assertEquals(taskUidInput, taskUidOutput);
+			String taskNAme = responseTask.get("name").toString();
+			Assertions.assertEquals("test_" + i, taskNAme);
+			i++;
 		}
 	}
 
