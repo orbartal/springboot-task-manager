@@ -35,6 +35,12 @@ public class TaskController {
 		return taskService.getAllTasks();
 	}
 
+	@GetMapping("/uid/{uid}/details")
+	public TaskInfo getAllTasks(@PathVariable String uid) {
+		UUID uuid = UUID.fromString(uid);
+		return taskService.getTaskInfoByUid(uuid);
+	}
+
 	@GetMapping("/uid/{uid}/progress")
 	public SseEmitter eventEmitter(@PathVariable String uid) throws IOException {
 		UUID uuid = UUID.fromString(uid);

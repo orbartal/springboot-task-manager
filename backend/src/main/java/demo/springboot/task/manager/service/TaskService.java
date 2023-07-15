@@ -54,6 +54,14 @@ public class TaskService {
 		return emitter.get();
 	}
 
+	public TaskInfo getTaskInfoByUid(UUID uuid) {
+		Optional<TaskInfo> opt = taskData.readInfoByUid(uuid);
+		if (opt.isEmpty()) {
+			throw new RuntimeException("Not found task with uid: " + uuid);
+		}
+		return opt.get();
+	}
+
 	public List<TaskInfo> getAllTasks() {
 		List<TaskInfo> tasks = taskData.readAll();
 		return tasks;

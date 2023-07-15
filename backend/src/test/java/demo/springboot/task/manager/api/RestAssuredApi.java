@@ -22,6 +22,10 @@ public class RestAssuredApi {
 		return RestAssured.given().contentType("application/json").when().get(url).andReturn();
 	}
 
+	public static Response getTaskByUid(String url) {
+		return RestAssured.given().contentType("application/json").when().get(url).andReturn();
+	}
+
 	public static Response getProgress(String url) {
 		String contentType = "text/event-stream;charset=UTF-8";
 		return RestAssured.given().contentType(contentType).when().get(url).andReturn();

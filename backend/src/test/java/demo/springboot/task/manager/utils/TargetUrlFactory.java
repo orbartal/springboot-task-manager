@@ -10,6 +10,10 @@ public class TargetUrlFactory {
 		return "http://localhost:" + serverPort + "/api/v1/task";
 	}
 
+	public static String buildGetTaskByUidUrl(int serverPort, String taskUid) {
+		return "http://localhost:" + serverPort + "/api/v1/task/uid/" + taskUid + "/details";
+	}
+
 	public static String buildStartTimeTaskUrl(int serverPort) {
 		return "http://localhost:" + serverPort + "/api/v1/time/task";
 	}

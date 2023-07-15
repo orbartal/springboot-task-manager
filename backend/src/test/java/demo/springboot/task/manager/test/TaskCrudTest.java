@@ -85,9 +85,25 @@ public class TaskCrudTest {
 		List<Map> actualTaskUids1 = responseTasks.stream().map(e->(HashMap)e).toList();
 		List<String> actualTaskUids2 = actualTaskUids1.stream().map(m->m.get("uid").toString()).sorted().toList();
 
-		System.out.println("TaskCrudTest.responseTasks");
-		System.out.println(actualTaskUids2);
 		Assertions.assertEquals(taskUids, actualTaskUids2);
+	}
+
+	@SuppressWarnings({"rawtypes" })
+	@Order(3)
+	@Test
+	public void testTaskByUid() throws Exception {
+		for (String taskUidInput : taskUids) {
+			Response response = targetApi.getTaskByUid(taskUidInput);
+
+			Assertions.assertNotNull(response);
+			Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
+			Assertions.assertNotNull(response.getBody());
+
+			Map responseTask = response.getBody().as(Map.class);
+			Assertions.assertNotNull(response.getBody());
+			String taskUidOutput = responseTask.get("uid").toString();
+			Assertions.assertEquals(taskUidInput, taskUidOutput);
+		}
 	}
 
 }

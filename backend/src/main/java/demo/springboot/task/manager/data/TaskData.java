@@ -2,6 +2,7 @@ package demo.springboot.task.manager.data;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,6 +21,10 @@ public class TaskData {
 
 	public void end(UUID uid) {
 		tasks.remove(uid);
+	}
+
+	public Optional<TaskInfo> readInfoByUid(UUID uuid) {
+		return Optional.ofNullable(tasks.get(uuid));
 	}
 
 	public List<TaskInfo> readAll() {

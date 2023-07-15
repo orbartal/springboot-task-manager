@@ -27,4 +27,9 @@ public class TargetApi {
 		return RestAssuredApi.getAllTasks(url);
 	}
 
+	public Response getTaskByUid(String taskUid) {
+		String url = TargetUrlFactory.buildGetTaskByUidUrl(port, taskUid);
+		return RestAssuredApi.getTaskByUid(url);
+	}
+
 }
