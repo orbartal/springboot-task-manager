@@ -3,7 +3,6 @@ package demo.springboot.task.manager.api;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,7 @@ public class TaskController {
 
 	@PostMapping("/create")
 	public Map<String, String> creaetNewTask(@RequestBody TaskCreateRequest request) {
-		return taskService.createNewTask(request.getName());
+		return taskService.createNewTask(request);
 	}
 
 	@GetMapping("")
@@ -39,14 +38,12 @@ public class TaskController {
 
 	@GetMapping("/uid/{uid}/details")
 	public TaskInfo getAllTasks(@PathVariable String uid) {
-		UUID uuid = UUID.fromString(uid);
-		return taskService.getTaskInfoByUid(uuid);
+		return taskService.getTaskInfoByUid(uid);
 	}
 
 	@GetMapping("/uid/{uid}/progress")
 	public SseEmitter eventEmitter(@PathVariable String uid) throws IOException {
-		UUID uuid = UUID.fromString(uid);
-		return taskService.createEmitterByTaskUid(uuid);
+		return taskService.createEmitterByTaskUid(uid);
 	}
 
 }

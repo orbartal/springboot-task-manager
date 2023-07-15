@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import demo.springboot.task.manager.model.TaskCreateRequest;
 import demo.springboot.task.manager.model.TaskInfo;
 import demo.springboot.task.manager.service.TaskService;
 
@@ -19,19 +20,21 @@ public class TaskApp {
 		this.taskService = taskService;
 	}
 
-	public Map<String, String> createNewTask(String name) {
-		return taskService.createNewTask(name);
+	public Map<String, String> createNewTask(TaskCreateRequest request) {
+		return taskService.createNewTask(request.getName());
 	}
 
 	public List<TaskInfo> getAllTasks() {
 		return taskService.getAllTasks();
 	}
 
-	public TaskInfo getTaskInfoByUid(UUID uuid) {
+	public TaskInfo getTaskInfoByUid(String uid) {
+		UUID uuid = UUID.fromString(uid);
 		return taskService.getTaskInfoByUid(uuid);
 	}
 
-	public SseEmitter createEmitterByTaskUid(UUID uuid) {
+	public SseEmitter createEmitterByTaskUid(String uid) {
+		UUID uuid = UUID.fromString(uid);
 		return taskService.createEmitterByTaskUid(uuid);
 	}
 
