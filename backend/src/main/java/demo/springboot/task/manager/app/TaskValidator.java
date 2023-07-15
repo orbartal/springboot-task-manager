@@ -12,7 +12,7 @@ public class TaskValidator {
 	public void validate(TaskCreateRequest request) {
 		String taskName = request.getName();
 		if (taskName == null || taskName.isBlank()) {
-			throw new RuntimeException("Missing task name");
+			throw new IllegalArgumentException("Missing task name");
 		}
 	}
 
@@ -20,7 +20,7 @@ public class TaskValidator {
 		try {
 			return UUID.fromString(uid);
 		} catch (Throwable t) {
-			throw new RuntimeException("Invalid taks uid: " + uid);
+			throw new IllegalArgumentException("Invalid taks uid: " + uid);
 		}
 	}
 
