@@ -22,4 +22,14 @@ public class TargetApi {
 		return RestAssuredApi.startTimeTask(url, request);
 	}
 
+	public Response getAllTasks() {
+		String url = TargetUrlFactory.buildGetAllTasksUrl(port);
+		return RestAssuredApi.getAllTasks(url);
+	}
+
+	public Response getTaskByUid(String taskUid) {
+		String url = TargetUrlFactory.buildGetTaskByUidUrl(port, taskUid);
+		return RestAssuredApi.getTaskByUid(url);
+	}
+
 }
