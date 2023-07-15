@@ -25,9 +25,9 @@ public class TaskService {
 		this.emitterService = emitterService;
 	}
 
-	public Map<String, String> createNewTask() {
+	public Map<String, String> createNewTask(String taskName) {
 		UUID uid = UUID.randomUUID();
-		TaskInfo taskInfo = new TaskInfo(uid, "TODO");
+		TaskInfo taskInfo = new TaskInfo(uid, taskName);
 		taskData.add(taskInfo);
 		emitterService.createEmitter(uid);
 		return Collections.singletonMap("uid", uid.toString());

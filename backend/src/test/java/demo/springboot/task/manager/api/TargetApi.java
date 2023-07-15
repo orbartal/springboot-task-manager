@@ -1,5 +1,6 @@
 package demo.springboot.task.manager.api;
 
+import demo.springboot.task.manager.model.TaskCreateRequest;
 import demo.springboot.task.manager.model.TimeTaskRequest;
 import demo.springboot.task.manager.utils.TargetUrlFactory;
 import io.restassured.response.Response;
@@ -14,7 +15,14 @@ public class TargetApi {
 
 	public Response createTask() {
 		String url = TargetUrlFactory.buildCreateTaskUrl(port);
-		return RestAssuredApi.createTask(url);
+		TaskCreateRequest request = new TaskCreateRequest();
+		request.setName("NoName");
+		return RestAssuredApi.createTask(url, request);
+	}
+	
+	public Response createTask(TaskCreateRequest request) {
+		String url = TargetUrlFactory.buildCreateTaskUrl(port);
+		return RestAssuredApi.createTask(url, request);
 	}
 
 	public Response startTimeTask(TimeTaskRequest request) {
