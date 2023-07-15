@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import demo.springboot.task.manager.app.TaskApp;
 import demo.springboot.task.manager.model.TaskCreateRequest;
 import demo.springboot.task.manager.model.TaskInfo;
-import demo.springboot.task.manager.service.TaskService;
 
 @RestController
 @RequestMapping("/api/v1/task")
 public class TaskController {
 
-	private TaskService taskService;
+	private TaskApp taskService;
 
-	public TaskController(TaskService taskService) {
+	public TaskController(TaskApp taskService) {
 		this.taskService = taskService;
 	}
 
