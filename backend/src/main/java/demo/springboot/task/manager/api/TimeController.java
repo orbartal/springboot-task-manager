@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import demo.springboot.task.manager.app.TimeTaskApp;
 import demo.springboot.task.manager.model.TimeTaskRequest;
-import demo.springboot.task.manager.service.TimeService;
 
 @RestController
 @RequestMapping("/api/v1/time")
 public class TimeController {
 
-	private final TimeService timeService;
+	private final TimeTaskApp timeService;
 
 	@Autowired
-	public TimeController(TimeService timeService) {
+	public TimeController(TimeTaskApp timeService) {
 		this.timeService = timeService;
 	}
 
