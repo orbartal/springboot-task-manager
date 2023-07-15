@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import demo.springboot.task.manager.app.TaskApp;
 import demo.springboot.task.manager.model.TaskCreateRequest;
+import demo.springboot.task.manager.model.TaskDetailsResponse;
 import demo.springboot.task.manager.model.TaskInfo;
 
 @RestController
@@ -37,7 +38,7 @@ public class TaskController {
 	}
 
 	@GetMapping("/uid/{uid}/details")
-	public TaskInfo getAllTasks(@PathVariable String uid) {
+	public TaskDetailsResponse getTaskByUid(@PathVariable String uid) {
 		return taskService.getTaskInfoByUid(uid);
 	}
 
