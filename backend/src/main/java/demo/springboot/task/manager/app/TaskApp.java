@@ -27,8 +27,9 @@ public class TaskApp {
 		return taskService.createNewTask(request.getName());
 	}
 
-	public List<TaskInfo> getAllTasks() {
-		return taskService.getAllTasks();
+	public List<TaskDetailsResponse> getAllTasks() {
+		List<TaskInfo> infos = taskService.getAllTasks();
+		return infos.stream().map(i->taskMapper.toResponse(i)).toList();
 	}
 
 	public TaskDetailsResponse getTaskInfoByUid(String uid) {

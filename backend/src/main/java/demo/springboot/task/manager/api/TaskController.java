@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import demo.springboot.task.manager.app.TaskApp;
 import demo.springboot.task.manager.model.TaskCreateRequest;
 import demo.springboot.task.manager.model.TaskDetailsResponse;
-import demo.springboot.task.manager.model.TaskInfo;
 
 @RestController
 @RequestMapping("/api/v1/task")
@@ -33,7 +32,7 @@ public class TaskController {
 	}
 
 	@GetMapping("")
-	public List<TaskInfo> getAllTasks() {
+	public List<TaskDetailsResponse> getAllTasks() {
 		return taskService.getAllTasks();
 	}
 
