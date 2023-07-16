@@ -37,6 +37,8 @@ public class TaskCrudTest {
 										.build();
 
 	private static List<String> taskUids = new ArrayList<>();
+	private static Map<String, String> taskNameByUid = new HashMap<>();
+
 
 	@LocalServerPort
 	private int port;
@@ -55,7 +57,8 @@ public class TaskCrudTest {
 	public void test01CreateNewTaskAndGetItsUid() throws Exception {
 		for (int i = 0; i < testConfig.getNumberOfTasks(); i++) {
 			TaskCreateRequest request = new TaskCreateRequest();
-			request.setName("test_" + i);
+			String taskName = "test_" + i;
+			request.setName(taskName);
 			Response response = targetApi.createTask(request);
 
 			Assertions.assertNotNull(response);
@@ -67,6 +70,7 @@ public class TaskCrudTest {
 			Assertions.assertNotNull(responseMap.get("uid"));
 			String taskUid = responseMap.get("uid").toString();
 			taskUids.add(taskUid);
+			taskNameByUid.put(taskUid, taskName);
 		}
 		taskUids = taskUids.stream().sorted().toList();
 	}
@@ -95,7 +99,6 @@ public class TaskCrudTest {
 	@Order(3)
 	@Test
 	public void testTaskByUid() throws Exception {
-		int i = 0;
 		for (String taskUidInput : taskUids) {
 			Response response = targetApi.getTaskByUid(taskUidInput);
 
@@ -107,9 +110,10 @@ public class TaskCrudTest {
 			Assertions.assertNotNull(response.getBody());
 			String taskUidOutput = responseTask.get("uid").toString();
 			Assertions.assertEquals(taskUidInput, taskUidOutput);
-			String taskNAme = responseTask.get("name").toString();
-			Assertions.assertEquals("test_" + i, taskNAme);
-			i++;
+
+			String actualTaskName = responseTask.get("name").toString();
+			String expectedTaskName =  taskNameByUid.get(taskUidInput);
+			Assertions.assertEquals(expectedTaskName, actualTaskName);
 		}
 	}
 
