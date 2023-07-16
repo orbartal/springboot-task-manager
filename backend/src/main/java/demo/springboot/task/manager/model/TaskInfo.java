@@ -4,10 +4,12 @@ import java.util.UUID;
 
 public class TaskInfo {
 	
+	private TaskStatusEnum status;
 	private final UUID uid;
 	private final String name;
 
 	public TaskInfo(UUID uid, String name) {
+		this.status = TaskStatusEnum.CREATED;
 		this.uid = uid;
 		this.name = name;
 	}
@@ -18,6 +20,14 @@ public class TaskInfo {
 
 	public String getName() {
 		return name;
+	}
+
+	public void setStatus(TaskStatusEnum status) {
+		this.status = status;
+	}
+
+	public TaskStatusEnum getStatus() {
+		return status;
 	}
 
 	@Override
