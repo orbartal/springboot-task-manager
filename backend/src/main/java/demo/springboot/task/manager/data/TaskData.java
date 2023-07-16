@@ -20,6 +20,15 @@ public class TaskData {
 		tasks.put(taskInfo.getUid(), taskInfo);
 	}
 
+	public Optional<TaskInfo> start(UUID uid) {
+		TaskInfo task = tasks.get(uid);
+		if (task == null) {
+			return Optional.empty();
+		}
+		task.setStatus(TaskStatusEnum.RUNNING);
+		return Optional.of(task);
+	}
+
 	public Optional<TaskInfo> end(UUID uid) {
 		TaskInfo task = tasks.get(uid);
 		if (task == null) {

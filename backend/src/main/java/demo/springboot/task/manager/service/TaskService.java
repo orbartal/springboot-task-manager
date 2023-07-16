@@ -33,6 +33,10 @@ public class TaskService {
 		return Collections.singletonMap("uid", uid.toString());
 	}
 
+	public void startTask(UUID taskUid) {
+		taskData.start(taskUid);
+	}
+
 	public void endTask(UUID uid) {
 		taskData.end(uid);
 		emitterService.delete(uid);

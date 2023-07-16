@@ -22,7 +22,12 @@ public class TimeService {
 	public void startTimeTask(UUID taskUid, long interval, int repeats) {
 		TaskEmitter emitter = taskService.getEmitterByTaskUid(taskUid);
 		SubscriberEmitter subscriber = new SubscriberEmitter(taskUid, emitter, repeats);
-		Flux.interval(Duration.ofSeconds(1), Duration.ofSeconds(interval)).log().take(repeats).doFinally(e->onEnd(taskUid, e)).subscribe(subscriber);
+		Flux.interval(Duration.ofSeconds(1), Duration.ofSeconds(interval)).log().take(repeats).doFirst(()->onStart(taskUid)).doFinally(e->onEnd(taskUid, e)).subscribe(subscriber);
+	}
+
+	private Object onStart(UUID taskUid) {
+		taskService.startTask(taskUid);
+		return null;
 	}
 
 	private Object onEnd(UUID taskUid, SignalType e) {
