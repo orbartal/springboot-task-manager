@@ -140,10 +140,11 @@ public class ManyTasksWithManyListnersTest {
 
 				List<Map<String, String>> events = result.getEvents();
 				Assertions.assertNotNull(events);
-				Assertions.assertEquals(5, events.size());
+
+				List<Integer> expectedIds = testConfig.getEventsIds();
+				Assertions.assertEquals(expectedIds.size(), events.size());
 
 				List<Integer> actualIds = events.stream().map(e->e.get("id")).map(s->Integer.parseInt(s)).collect(Collectors.toList());
-				List<Integer> expectedIds = testConfig.getEventsIds();
 				Assertions.assertEquals(expectedIds, actualIds);
 
 				Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
