@@ -32,7 +32,7 @@ public class TaskInfo {
 
 	@Override
 	public String toString() {
-		return "TaskInfo [uid=" + uid + ", name=" + name + "]";
+		return "TaskInfo [status=" + status + ", uid=" + uid + ", name=" + name + "]";
 	}
 
 }
