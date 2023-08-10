@@ -27,6 +27,7 @@ import demo.springboot.task.manager.config.TestTimeTaskConfig;
 import demo.springboot.task.manager.model.ProgressResult;
 import demo.springboot.task.manager.model.ServerSentEventSubscriber;
 import demo.springboot.task.manager.model.TimeTaskRequest;
+import demo.springboot.task.manager.utils.RandomTextUtil;
 import demo.springboot.task.manager.utils.TargetUrlFactory;
 import demo.springboot.task.manager.utils.TaskProgressDataFactory;
 import io.restassured.response.Response;
@@ -66,7 +67,8 @@ public class ManyTasksWithManyListnersTest {
 	@Test
 	public void test01CreateNewTaskAndGetItsUid() throws Exception {
 		for (int i = 0; i < testConfig.getNumberOfTasks(); i++) {
-			Response response = targetApi.createTask();
+			String taskName = RandomTextUtil.getRandomAlphabeticText(5);
+			Response response = targetApi.createTask(taskName);
 
 			Assertions.assertNotNull(response);
 			Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
