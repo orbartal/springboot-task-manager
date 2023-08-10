@@ -4,6 +4,7 @@ public class TaskDetailsResponse {
 	
 	private String uid;
 	private String name;
+	private String status;
 
 	public String getUid() {
 		return uid;
@@ -21,9 +22,17 @@ public class TaskDetailsResponse {
 		this.name = name;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "TaskDetailsResponse [uid=" + uid + ", name=" + name + "]";
+		return "TaskDetailsResponse [uid=" + uid + ", name=" + name + ", status=" + status + "]";
 	}
 
 }

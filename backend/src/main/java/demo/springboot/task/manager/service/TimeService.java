@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import demo.springboot.task.manager.sender.TaskEmitter;
 import demo.springboot.task.manager.subscriber.SubscriberEmitter;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.SignalType;
 
 @Service
 public class TimeService {
@@ -21,7 +22,19 @@ public class TimeService {
 	public void startTimeTask(UUID taskUid, long interval, int repeats) {
 		TaskEmitter emitter = taskService.getEmitterByTaskUid(taskUid);
 		SubscriberEmitter subscriber = new SubscriberEmitter(taskUid, emitter, repeats);
-		Flux.interval(Duration.ofSeconds(1), Duration.ofSeconds(interval)).log().take(repeats).subscribe(subscriber);
+		Flux.interval(Duration.ofSeconds(1), Duration.ofSeconds(interval)).log().take(repeats).doFirst(()->onStart(taskUid)).doFinally(e->onEnd(taskUid, e)).subscribe(subscriber);
+	}
+
+	private Object onStart(UUID taskUid) {
+		taskService.startTask(taskUid);
+		return null;
+	}
+
+	private Object onEnd(UUID taskUid, SignalType e) {
+		if (SignalType.ON_COMPLETE.equals(e)) {
+			taskService.endTask(taskUid);
+		}
+		return null;
 	}
 
 }

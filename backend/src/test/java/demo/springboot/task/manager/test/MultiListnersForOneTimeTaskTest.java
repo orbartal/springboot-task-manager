@@ -27,6 +27,7 @@ import demo.springboot.task.manager.api.TargetApi;
 import demo.springboot.task.manager.model.ProgressResult;
 import demo.springboot.task.manager.model.ServerSentEventSubscriber;
 import demo.springboot.task.manager.model.TimeTaskRequest;
+import demo.springboot.task.manager.utils.RandomTextUtil;
 import demo.springboot.task.manager.utils.TargetUrlFactory;
 import demo.springboot.task.manager.utils.TaskProgressDataFactory;
 import io.restassured.response.Response;
@@ -57,7 +58,8 @@ public class MultiListnersForOneTimeTaskTest {
 	@Order(1)
 	@Test
 	public void test01CreateNewTaskAndGetItsUid() throws Exception {
-		Response response = targetApi.createTask();
+		String taskName = RandomTextUtil.getRandomAlphabeticText(5);
+		Response response = targetApi.createTask(taskName);
 
 		Assertions.assertNotNull(response);
 		Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
@@ -122,7 +124,7 @@ public class MultiListnersForOneTimeTaskTest {
 
 			Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
 			Assertions.assertEquals(1, eventValues.size());
-			Assertions.assertEquals(taskUid.get(), eventValues.iterator().next());
+			Assertions.assertEquals("progress", eventValues.iterator().next());
 		}
 	}
 

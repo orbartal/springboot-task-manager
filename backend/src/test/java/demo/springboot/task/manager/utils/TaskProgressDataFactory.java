@@ -37,6 +37,9 @@ public class TaskProgressDataFactory {
 
 	public static  Map<Integer, Double> buildMarixOfProgressByEventId(ProgressResult progressResult) {
 		return progressResult.getEvents().stream()
-				.collect(Collectors.toMap(e -> Integer.parseInt(e.get("id")), e -> Double.parseDouble(e.get("data"))));
+				.collect(Collectors.toMap(
+						e -> Integer.parseInt(e.get("id")), 
+						e -> JsonDataUtil.getValueFromData(e.get("data"))
+				));
 	}
 }

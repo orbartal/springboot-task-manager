@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 import demo.springboot.task.manager.model.TaskInfo;
+import demo.springboot.task.manager.model.TaskStatusEnum;
 
 @Component
 public class TaskData {
@@ -19,8 +20,22 @@ public class TaskData {
 		tasks.put(taskInfo.getUid(), taskInfo);
 	}
 
-	public void end(UUID uid) {
-		tasks.remove(uid);
+	public Optional<TaskInfo> start(UUID uid) {
+		TaskInfo task = tasks.get(uid);
+		if (task == null) {
+			return Optional.empty();
+		}
+		task.setStatus(TaskStatusEnum.RUNNING);
+		return Optional.of(task);
+	}
+
+	public Optional<TaskInfo> end(UUID uid) {
+		TaskInfo task = tasks.get(uid);
+		if (task == null) {
+			return Optional.empty();
+		}
+		task.setStatus(TaskStatusEnum.END);
+		return Optional.of(task);
 	}
 
 	public Optional<TaskInfo> readInfoByUid(UUID uuid) {

@@ -13,15 +13,10 @@ public class TargetApi {
 		this.port = port;
 	}
 
-	public Response createTask() {
+	public Response createTask(String taskName) {
 		String url = TargetUrlFactory.buildCreateTaskUrl(port);
 		TaskCreateRequest request = new TaskCreateRequest();
-		request.setName("NoName");
-		return RestAssuredApi.createTask(url, request);
-	}
-	
-	public Response createTask(TaskCreateRequest request) {
-		String url = TargetUrlFactory.buildCreateTaskUrl(port);
+		request.setName(taskName);
 		return RestAssuredApi.createTask(url, request);
 	}
 

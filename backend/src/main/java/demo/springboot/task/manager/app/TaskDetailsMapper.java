@@ -12,6 +12,7 @@ public class TaskDetailsMapper {
 		TaskDetailsResponse response = new TaskDetailsResponse();
 		response.setName(info.getName());
 		response.setUid(info.getUid().toString());
+		response.setStatus(info.getStatus().name());
 		return response;
 	}
 
