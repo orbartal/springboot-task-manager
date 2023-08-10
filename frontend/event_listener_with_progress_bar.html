@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+	
+		<style>
+			#myProgress {
+				width: 100%;
+				background-color: white;
+			}
+
+			#myBar {
+				width: 1%;
+				height: 30px;
+				background-color: green;
+			}
+		</style>
+	
+		<script type = "text/javascript">
+		
+			function updateProgressBar(inputProgress) {
+				var elem = document.getElementById("myBar");
+				var width = elem.style.width;
+				var widthD =  inputProgress;
+				if (widthD>1){
+				   widthD = 0.99
+				}
+				var widthP = toPercentage(widthD);
+				elem.style.width = widthP;
+			}
+
+			function toDecimal(input) {
+			  var percent =	input.slice(0, -1); 
+			  return parseFloat(percent) / 100;
+			}
+
+			function toPercentage(input) {
+			 if (isNaN(input)) {
+				return 0 + "%";
+			  }
+			  var num = input * 100;
+			  return num + "%";
+			}
+
+			function addEventText(eventText) {
+				const node = document.createElement("li");
+				const textnode = document.createTextNode(eventText);
+				node.appendChild(textnode);
+				document.getElementById("myList").appendChild(node);
+			}
+
+			function addEventBar(taskUid) {
+				const taskTitleId = "task_title_" + taskUid;
+				const taskBarId = "task_bar_" + taskUid;
+
+				const taskText = document.createTextNode(taskUid);
+				taskText.setAttribute(taskTitleId);
+				const taskBar = document.createElement('div');
+				taskBar.setAttribute(taskBarId);
+
+				const node = document.createElement("li");
+				node.appendChild(taskText);
+				node.appendChild(taskBar);
+
+				document.getElementById("myProgressList").appendChild(node);
+			}
+
+			function startListenToEvents() {
+				var urlServer = document.getElementById("EventSourceBaseUrl").value;
+				var taskUid = document.getElementById("TaskUidText").value;
+				var urlServerEvent = urlServer + "/api/v1/task/uid/" + taskUid +"/progress";
+				console.log("urlServerEvent = " + urlServerEvent);
+
+				if(typeof(EventSource) === "undefined") {
+					console.log("Your browser Doesn't support the SSE");
+				} 
+
+				var eventSource = new EventSource(urlServerEvent);
+				console.log("eventSource= " + eventSource);
+
+				//Now bind various Events , Message, and Error to this event
+				eventSource.addEventListener('open', function(e) {
+				  console.log("eventSource.addEventListener.open.")
+				});
+
+				eventSource.addEventListener('progress', function(event) {
+				  console.log("eventSource.addEventListener.progress");
+				  const dataJson = event.data;
+				  const dataObject = JSON.parse(dataJson);
+				  const taskId  = dataObject.taskId;
+				  const eventId  = dataObject.eventId;
+				  const progress  = dataObject.progress;
+				  updateProgressBar(progress);
+				  addEventText(dataJson);
+				  console.log("progress =  " + progress);
+				});
+				
+				eventSource.addEventListener('error', function(e) {
+				console.log("eventSource.addEventListener.error");
+				  if (e.readyState == EventSource.CLOSED) { 
+					console.log("Connection was closed. ");
+				  }
+				});
+			
+			}
+		</script>
+
+	</head>
+
+	</body>
+
+		<h1>Received Server Events</h1>
+		
+		<div id="myButtons" style='width:500px;'>
+			<button style='width:30%;' onclick="startListenToEvents()">Click Me</button><br>
+			<p>server base url</p>
+			<input style='width:90%;' type="text" id="EventSourceBaseUrl" value="http://localhost:8075"><br>
+			<p>task uid</p>
+			<input style='width:90%;' type="text" id="TaskUidText" value="task uid">
+		</div>
+		
+		<div id="myProgress">
+			<h3>Progress bar per task</h3>
+			<ul id="myProgressList">
+				<li id="aaa">
+					<p id="">task uid</p>
+					<div id="myBar"></div>
+				</li>
+			</ul>
+		</div>
+		
+		<div id="result">
+			<h3>All income events</h3>
+			<ul id="myList">
+			</ul>
+		</div>
+
+	</body>
+
+</html>
