@@ -149,7 +149,7 @@ public class ManyTasksWithManyListnersTest {
 
 				Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
 				Assertions.assertEquals(1, eventValues.size());
-				Assertions.assertEquals(taskUid, eventValues.iterator().next());
+				Assertions.assertEquals("progress", eventValues.iterator().next());
 			}
 		}
 
