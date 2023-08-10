@@ -113,7 +113,7 @@ public class TimeTaskTest {
 
 		Set<String> eventValues = events.stream().map(e->e.get("event")).collect(Collectors.toSet());
 		Assertions.assertEquals(1, eventValues.size());
-		Assertions.assertEquals(taskUid.get(), eventValues.iterator().next());
+		Assertions.assertEquals("progress", eventValues.iterator().next());
 	}
 
 	@Order(5)
