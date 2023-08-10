@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import demo.springboot.task.manager.app.TaskApp;
 import demo.springboot.task.manager.model.TaskCreateRequest;
 import demo.springboot.task.manager.model.TaskDetailsResponse;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/task")
 public class TaskController {
