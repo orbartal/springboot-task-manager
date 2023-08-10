@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
+
+import com.google.gson.JsonObject;
 
 public class TaskEmitter {
 
@@ -31,11 +34,24 @@ public class TaskEmitter {
 
 	private void sendProgress(SseEmitter emitter, double progress) {
 		try {
-			SseEventBuilder eventBuilder = SseEmitter.event().id(counter + "").name(taskUid.toString()).data(progress);
+			String jsonData = buildJsonData(progress);
+			SseEventBuilder eventBuilder = SseEmitter.event().id(counter + "").name("progress").data(jsonData);
 			emitter.send(eventBuilder);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String buildJsonData(double progress) {
+		String eventCounter = counter+"";
+		String taskId = taskUid.toString();
+		String progressValue = progress + "";
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("taskId", taskId);
+		jsonObject.addProperty("eventId", eventCounter);
+		jsonObject.addProperty("progress", progressValue);
+		String jsonData = jsonObject.toString();
+		return jsonData;
 	}
 
 	public void completeWithError(Throwable t) {
