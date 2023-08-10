@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import demo.springboot.task.manager.api.TargetApi;
 import demo.springboot.task.manager.config.TestTimeTaskConfig;
-import demo.springboot.task.manager.model.TaskCreateRequest;
+import demo.springboot.task.manager.utils.RandomTextUtil;
 import demo.springboot.task.manager.utils.TaskProgressDataFactory;
 import io.restassured.response.Response;
 
@@ -56,10 +56,8 @@ public class TaskCrudTest {
 	@Test
 	public void test01CreateNewTaskAndGetItsUid() throws Exception {
 		for (int i = 0; i < testConfig.getNumberOfTasks(); i++) {
-			TaskCreateRequest request = new TaskCreateRequest();
-			String taskName = "test_" + i;
-			request.setName(taskName);
-			Response response = targetApi.createTask(request);
+			String taskName = RandomTextUtil.getRandomAlphabeticText(5);
+			Response response = targetApi.createTask(taskName);
 
 			Assertions.assertNotNull(response);
 			Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());

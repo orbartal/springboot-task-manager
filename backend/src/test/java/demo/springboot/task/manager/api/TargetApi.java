@@ -20,11 +20,6 @@ public class TargetApi {
 		return RestAssuredApi.createTask(url, request);
 	}
 
-	public Response createTask(TaskCreateRequest request) {
-		String url = TargetUrlFactory.buildCreateTaskUrl(port);
-		return RestAssuredApi.createTask(url, request);
-	}
-
 	public Response startTimeTask(TimeTaskRequest request) {
 		String url = TargetUrlFactory.buildStartTimeTaskUrl(port);
 		return RestAssuredApi.startTimeTask(url, request);
